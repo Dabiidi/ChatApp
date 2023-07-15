@@ -4,6 +4,7 @@ const MessageSchema = mongoose.Schema(
   {
     message: {
       text: { type: String, required: true },
+      attachment: { type: String }, // File attachment field
     },
     users: Array,
     sender: {
@@ -17,4 +18,4 @@ const MessageSchema = mongoose.Schema(
   }
 );
 
-module.exports = mongoose.model("Messages", MessageSchema);
+module.exports = mongoose.model("Message", MessageSchema);

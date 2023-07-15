@@ -6,9 +6,11 @@ import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { useNavigate } from "react-router-dom";
 import { setAvatarRoute } from "../utils/APIRoutes";
+import { Buffer } from "buffer";
+
 
 export default function SetAvatar() {
-  const api = "https://avatars.dicebear.com/api/avataaars"; // DiceBear Avatars API
+  const api = `https://api.multiavatar.com/4645646`;
   const navigate = useNavigate();
   const [avatars, setAvatars] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
@@ -30,7 +32,9 @@ export default function SetAvatar() {
     if (selectedAvatar === undefined) {
       toast.error("Please select an avatar", toastOptions);
     } else {
-      const user = JSON.parse(localStorage.getItem(process.env.REACT_APP_LOCALHOST_KEY));
+      const user = await JSON.parse(
+        localStorage.getItem(process.env.REACT_APP_LOCALHOST_KEY)
+      );
 
       const { data } = await axios.post(`${setAvatarRoute}/${user._id}`, {
         image: avatars[selectedAvatar],
@@ -50,19 +54,19 @@ export default function SetAvatar() {
     }
   };
 
-  useEffect(() => {
-    const fetchAvatars = async () => {
-      const data = [];
-      for (let i = 0; i < 4; i++) {
-        const response = await axios.get(`${api}/${Math.random()}.svg`);
-        data.push(response.data);
-      }
-      setAvatars(data);
-      setIsLoading(false);
-    };
-
-    fetchAvatars();
+  useEffect(async () => {
+    const data = [];
+    for (let i = 0; i < 4; i++) {
+      const image = await axios.get(
+        `${api}/${Math.round(Math.random() * 1000)}`
+      );
+      const buffer = new Buffer(image.data);
+      data.push(buffer.toString("base64"));
+    }
+    setAvatars(data);
+    setIsLoading(false);
   }, []);
+
 
   return (
     <>
@@ -85,8 +89,8 @@ export default function SetAvatar() {
                 onClick={() => setSelectedAvatar(index)}
               >
                 <img
-                  src={`${api}/${Math.random()}.svg`}
-                  alt="avatar"
+                    src={`data:image/svg+xml;base64,${avatar}`}
+                    alt="avatar"
                 />
               </div>
             ))}

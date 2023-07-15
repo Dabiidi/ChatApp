@@ -33,16 +33,13 @@ export default function ChatInput({ handleSendMsg }) {
     const selectedFile = event.target.files[0];
     setFile(selectedFile);
     setFileUrl(URL.createObjectURL(selectedFile)); // Set the URL of the file
+    
   };
 
   const sendChat = (event) => {
     event.preventDefault();
     if (msg.length > 0) {
-      const messageWithFile = {
-        text: msg,
-        file: file ? { name: file.name, url: fileUrl } : null, // Include the file URL in the message
-      };
-      handleSendMsg(messageWithFile);
+      handleSendMsg(msg);
       setMsg("");
       setFile(null);
       setFileUrl(null); // Reset the file URL

@@ -23,6 +23,7 @@ export default function Logout() {
     </Button>
   );
 }
+
 const Button = styled.button`
   display: flex;
   justify-content: center;
